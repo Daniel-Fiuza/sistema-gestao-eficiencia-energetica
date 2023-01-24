@@ -29,7 +29,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.home'  # Enable the inner home (home)
+    'bootstrapform',
+    'apps.home',  # Enable the inner home (home)
+    'apps.clientes',
+    'apps.faturas',
 ]
 
 MIDDLEWARE = [
