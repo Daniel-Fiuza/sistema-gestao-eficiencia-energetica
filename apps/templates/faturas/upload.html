@@ -1,0 +1,51 @@
+{% extends 'layouts/base.html' %}
+
+{% load bootstrap %}
+
+{% block title %} Faturas {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header bg-transparent">
+            <h3 class="mb-0">Adicionar Fatura</h3>
+          </div>
+          <div class="card-body">
+            <form enctype="multipart/form-data" action="/faturas" method="post">
+                {% csrf_token %}
+                <input type="file" class="form-control mb-3" name="fatura" placeholder="Adicione sua fatura">
+                <input type="submit" class="btn btn-default" value="Enviar">
+            </form>
+          <!-- {% if result %}
+            <p>Arquivo enviado!</p>
+          {% endif %} -->
+          {% if url_file %}
+            <br>
+            <p>Baixar fatura: <a href="{{ url_file }}">Fatura</a></p>
+          {% endif %}
+          {% if excel_file %}
+            <p>Baixar Excel: <a href="{{ excel_file }}">Planilha</a></p>
+          {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+<script src="/static/assets/vendor/clipboard/dist/clipboard.min.js"></script>
+
+{% endblock javascripts %}
+      

@@ -1,0 +1,3 @@
+[submodule "etl-fatura-sgee"]
+	path = etl-fatura-sgee
+	url = https://github.com/Daniel-Fiuza/etl-fatura-sgee.git

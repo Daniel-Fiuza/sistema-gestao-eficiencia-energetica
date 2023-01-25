@@ -6,6 +6,9 @@ class Clientes(models.Model):
     email = models.EmailField(max_length=75)
     criado_em = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.razao_social
+
 
 
 CLASSES = (
@@ -19,3 +22,6 @@ class UC(models.Model):
     numero_cliente = models.CharField(max_length=15, blank=True, null=True)
     classificacao = models.CharField(max_length=3, choices=CLASSES)
     cnpj = models.CharField(max_length=20)
+
+    def __str__(self):
+        return f'{self.numero_uc} - {self.cliente}'

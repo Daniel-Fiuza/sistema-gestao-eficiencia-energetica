@@ -1,6 +1,18 @@
 from django import forms
 from django.forms.widgets import NumberInput
 
+
+class UploadFaturaResumidaForm(forms.Form):
+    fatura = forms.FileField(
+        label='Fatura',
+        widget=forms.FileInput(
+            attrs={
+                "placeholder": "Faça o upload da fatura",
+                "class": "form-control"
+            }
+    ))
+
+
 class UploadFaturaForm(forms.Form):
     
     numero_uc = forms.CharField(

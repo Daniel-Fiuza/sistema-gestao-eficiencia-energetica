@@ -23,6 +23,13 @@
               <span class="nav-link-text">Faturas</span>
             </a>
           </li>
+
+          <li class="nav-item">
+            <a class="nav-link {% if 'clientes' in segment %} active {% endif %}" href="{% url 'clientes' %}">
+              <i class="ni ni-circle-08 text-green"></i>
+              <span class="nav-link-text">Clientes</span>
+            </a>
+          </li>
           
           <li class="nav-item">
             <a class="nav-link {% if 'tables' in segment %} active {% endif %}" href="/tables.html">

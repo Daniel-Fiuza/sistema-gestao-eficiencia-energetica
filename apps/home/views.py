@@ -8,6 +8,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
+import mimetypes
+import os
+from urllib.parse import unquote
+from django.conf import settings
+from django.http import FileResponse
 
 
 @login_required(login_url="/login/")
@@ -26,7 +31,18 @@ def pages(request):
     try:
 
         load_template = request.path.split('/')[-1]
+        media = True if request.path.split('/')[1] == 'media' else False
 
+        if media:
+            mimetype, _ = mimetypes.guess_type(request.path, strict=True)
+            if not mimetype:
+                mimetype = "text/html"
+
+            path = '/'.join(request.path.split('/')[2:])
+            filepath = os.path.join(settings.MEDIA_ROOT, path)
+            filepath = unquote(os.path.join(settings.MEDIA_ROOT, path)).encode("utf-8")
+            return FileResponse(open(filepath, "rb"), content_type=mimetype)
+    
         if load_template == 'admin':
             return HttpResponseRedirect(reverse('admin:index'))
         context['segment'] = load_template
