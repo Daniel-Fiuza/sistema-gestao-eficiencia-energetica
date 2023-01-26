@@ -6,6 +6,7 @@ import fitz
 from fitz import Document, Page, Rect
 import codecs
 import os
+import platform
 from pdf2image import convert_from_path
 import re
 import numpy as np
@@ -94,7 +95,10 @@ class FaturaBase(ABC):
 
     def converteParaImagem(self):
         fatura = self.nome_arquivo
-        pages = convert_from_path(fatura, poppler_path=POPPLER_PATH)
+        if platform.system() == 'Windows':
+            pages = convert_from_path(fatura, poppler_path=POPPLER_PATH)
+        else:
+            pages = convert_from_path(fatura)
         
         filename = os.path.split(self.nome_arquivo)[-1]
         filename = filename.split('.')[0]
