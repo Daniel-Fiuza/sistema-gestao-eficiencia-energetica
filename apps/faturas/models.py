@@ -47,4 +47,7 @@ class DadosFaturas(models.Model):
     faturamento = models.FloatField()
     demanda_contratada = models.FloatField(blank=True, null=True)
 
+    def __str__(self):
+        return f'Dados Fatura {self.uc_id}  Mês: {self.mes_ano_fatura}'
+
 
