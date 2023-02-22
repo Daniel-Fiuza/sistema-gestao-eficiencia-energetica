@@ -13,26 +13,43 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-lg-6 col-7">
-          <h6 class="h2 text-white d-inline-block mb-0">Default</h6>
+          <!-- <h6 class="h2 text-white d-inline-block mb-0">Default</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
               <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
               <li class="breadcrumb-item"><a href="#">Dashboards</a></li>
               <li class="breadcrumb-item active" aria-current="page">Default</li>
             </ol>
-          </nav>
+          </nav> -->
           <h6 class="h2 text-white d-inline-block mb-0 ml-md-4">UC:</h6>
           <div class="form-group h2 text-white d-inline-block mb-0">
             <select class="form-control" id="UCSelect">
               {% for uc in uc_options %}
-                <option> {{ uc }} </option>
+                {% if uc == uc_selected %}
+                  <option selected> {{ uc }} </option>
+                {% else %}
+                  <option> {{ uc }} </option>
+                {% endif %}
               {% endfor %}
             </select>
           </div>
+  
         </div>
         <div class="col-lg-6 col-5 text-right">
-          <a href="#" class="btn btn-sm btn-neutral">New</a>
-          <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          <h6 class="h2 text-white d-inline-block ">Intervalo:</h6>
+          <div class="form-group h2 text-white d-inline-block ">
+            <select class="form-control px-5" id="TimeSelect">
+              {% for time in time_options %}
+                {% if time == time_selected %}
+                  <option selected> {{ time }} </option>
+                {% else %}
+                  <option> {{ time }} </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+          <!-- <a href="#" class="btn btn-sm btn-neutral">New</a>
+          <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
         </div>
       </div>
       <!-- Card stats -->
@@ -44,7 +61,7 @@
               <div class="row">
                 <div class="col">
                   <h5 class="card-title text-uppercase text-muted mb-0">Total Pago</h5>
-                  <span class="h2 font-weight-bold mb-0">R$ 350,897</span>
+                  <span class="h2 font-weight-bold mb-0"> {{ indicadores.card.total_pago }}</span>
                 </div>
                 <div class="col-auto">
                   <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
@@ -66,7 +83,7 @@
               <div class="row">
                 <div class="col">
                   <h5 class="card-title text-uppercase text-muted mb-0">Multas Pagas</h5>
-                  <span class="h2 font-weight-bold mb-0">R$ 2,356</span>
+                  <span class="h2 font-weight-bold mb-0"> {{ indicadores.card.multas_pagas }} </span>
                 </div>
                 <div class="col-auto">
                   <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
@@ -88,7 +105,7 @@
               <div class="row">
                 <div class="col">
                   <h5 class="card-title text-uppercase text-muted mb-0">KWh Efetivo</h5>
-                  <span class="h2 font-weight-bold mb-0">R$ 924</span>
+                  <span class="h2 font-weight-bold mb-0"> {{ indicadores.card.kwh_efetivo }} </span>
                 </div>
                 <div class="col-auto">
                   <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
@@ -110,7 +127,7 @@
               <div class="row">
                 <div class="col">
                   <h5 class="card-title text-uppercase text-muted mb-0">Meta de Economia</h5>
-                  <span class="h2 font-weight-bold mb-0">49,65%</span>
+                  <span class="h2 font-weight-bold mb-0"> {{ indicadores.card.meta_economia }} </span>
                 </div>
                 <div class="col-auto">
                   <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
@@ -251,9 +268,26 @@
 <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
 <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
 
+<script src="/static/assets/js/chartjs-plugin-colorschemes.min.js"></script>
+
 <!-- Dados Globais dos Gráficos -->
 <script>
+  
+  // Variáveis dos indicadores
   var data_multas = JSON.parse('{{ indicadores.multas|escapejs }}');
+  var data_ult_demanda = JSON.parse('{{ indicadores.ult_demanda|escapejs }}');
+  var data_kwh_efetivo = JSON.parse('{{ indicadores.kwh_efetivo|escapejs }}');
+  var data_dist_gastos = JSON.parse('{{ indicadores.dist_gastos|escapejs }}');
+  var data_hp_hfp = JSON.parse('{{ indicadores.hp_hfp|escapejs }}');
+  
+  // Funcionalidade do Filtro
+  $( "#TimeSelect,#UCSelect" ).change(function() {
+    let time_option = $( "#TimeSelect" ).val();
+    let uc_option = $('#UCSelect').val();
+    var csrftoken = '{{ csrf_token }}';
+    
+    window.location.href = '/?uc_filter=' + uc_option + '&time_filter=' + time_option;
+  });
 
 </script>
 

@@ -22,14 +22,29 @@ var KwhEfetivoBar = (function() {
 		var ordersChart = new Chart($chart, {
 			type: 'bar',
 			data: {
-				labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-				datasets: [{
-					label: 'Sales',
-					data: [25, 20, 30, 22, 17, 29],
-					borderColor: '#FF6384',
-					backgroundColor: '#FFB1C1',
-				}],
-			}
+				labels: 'labels' in data_kwh_efetivo !== undefined ? data_kwh_efetivo['labels'] : [],
+				datasets: 'datasets' in data_kwh_efetivo !== undefined ? data_kwh_efetivo['datasets'] : [],
+			},
+			options: {
+				maintainAspectRatio: true,
+				scales: {
+					yAxes: [{
+						display: true,
+						ticks: {
+							beginAtZero: true
+						}
+					}]
+				},
+				tooltips: {
+					enabled: true,
+					mode: 'single',
+					callbacks: {
+						label: function(tooltipItems, data) {
+							return data.datasets[0].label + ': ' + data.datasets[0].data[tooltipItems.index] + ' R$/KWh';
+						}
+					}
+				},
+			},
 		});
 
 		// Save to jQuery object

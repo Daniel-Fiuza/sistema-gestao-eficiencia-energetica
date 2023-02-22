@@ -22,13 +22,8 @@ var MultasBar = (function() {
 		var ordersChart = new Chart($chart, {
 			type: 'bar',
 			data: {
-				labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-				datasets: [{
-					label: 'Sales',
-					data: data_multas,
-					borderColor: '#36A2EB',
-      				backgroundColor: '#9BD0F5',
-				}]
+				labels: 'labels' in data_multas !== undefined ? data_multas['labels'] : [],
+				datasets: 'datasets' in data_multas !== undefined ? data_multas['datasets'] : [],
 			}
 		});
 

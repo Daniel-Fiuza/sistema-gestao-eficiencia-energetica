@@ -22,16 +22,19 @@ var UltDemandaBar = (function() {
 		var ultDemandaBar = new Chart($chart, {
 			type: 'bar',
 			data: {
-				labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-				datasets: [{
-					label: 'Demanda',
-					data: [25, 20, 30, 22, 17, 29],
-					borderColor: '#cc65fe',
-      				backgroundColor: '#cc65fe',
-				}]
+				labels: 'labels' in data_ult_demanda !== undefined ? data_ult_demanda['labels'] : [],
+				datasets: 'datasets' in data_ult_demanda !== undefined ? data_ult_demanda['datasets'] : [],
 			},
 			options: {
 				maintainAspectRatio: false,
+				scales: {
+					yAxes: [{
+						display: true,
+						ticks: {
+							beginAtZero: true
+						}
+					}]
+				}
 			}
 		});
 

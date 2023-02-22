@@ -22,15 +22,25 @@ var DistGastosPie = (function() {
 		var ordersChart = new Chart($chart, {
 			type: 'pie',
 			data: {
-				labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-				datasets: [{
-					label: 'Sales',
-					data: [25, 20, 30, 22, 17, 29],
-					backgroundColor: ["#ff6384", "#36a2eb", "#cc65fe", "#ffce56", "green", "brown"], 
-				}]
+				labels: 'labels' in data_dist_gastos !== undefined ? data_dist_gastos['labels'] : [],
+				datasets: 'datasets' in data_dist_gastos !== undefined ? data_dist_gastos['datasets'] : [],
 			},
 			options: {
 				maintainAspectRatio: false,
+				tooltips: {
+					enabled: true,
+					mode: 'single',
+					callbacks: {
+						label: function(tooltipItems, data) {
+							return data.labels[tooltipItems.index] + ': ' + data.datasets[0].data[tooltipItems.index] + ' %';
+						}
+					}
+				},
+				plugins: {
+					colorschemes: {
+					  scheme: 'brewer.DarkTwo8'
+					}
+				}
 			}
 		});
 

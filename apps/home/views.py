@@ -13,26 +13,35 @@ import os
 from urllib.parse import unquote
 from django.conf import settings
 from django.http import FileResponse
-from apps.home.indicadores import Indicadores
+from apps.home.indicadores import Indicadores, TIME_FILTER
 from apps.clientes.models import UC
 
 
 @login_required(login_url="/login/")
 def index(request):
     # Parâmetros de Filtro
-    uc_filter = request.GET.get('uc', None)
-
-    # Cálculo dos Indicadores
-    indicadores = Indicadores(uc_filter)
-    indicadores.multas = [40, 27, 60, 30, 25, 20]
+    uc_filter = request.GET.get('uc_filter', None)
+    uc_filter = uc_filter.split(' - ')[0] if uc_filter is not None else None
+    time_filter = request.GET.get('time_filter', None)
 
     # UC Opções de Entrada
     uc_options = UC.objects.all()
+    time_options = list(TIME_FILTER.keys())
+
+    # Cálculo dos Indicadores
+    uc_input = uc_filter if uc_filter is not None else uc_options.first().numero_uc
+    time_input = time_filter if time_filter is not None else time_options[0]
+    
+    indicadores = Indicadores(uc_input, time_input)
+    indicadores.efetua_calculos()
 
     # Definição do contexto
     context = {
         'segment': 'index',
-        'uc_options': uc_options, 
+        'uc_options': uc_options,
+        'uc_selected': uc_input, 
+        'time_options': time_options, 
+        'time_selected': time_input,
         'indicadores': indicadores
     }
 
