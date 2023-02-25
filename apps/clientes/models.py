@@ -17,7 +17,7 @@ CLASSES = (
 )
 
 class UC(models.Model):
-    cliente = models.ForeignKey(Clientes, on_delete=models.DO_NOTHING)
+    cliente = models.ForeignKey(Clientes, on_delete=models.DO_NOTHING, related_name='uc')
     numero_uc = models.CharField(max_length=15)
     numero_cliente = models.CharField(max_length=15, blank=True, null=True)
     classificacao = models.CharField(max_length=3, choices=CLASSES)

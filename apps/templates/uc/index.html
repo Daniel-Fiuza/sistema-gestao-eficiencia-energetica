@@ -13,10 +13,10 @@
 
     <div class="row p-3">
         <div class="col col-8">
-            <h1>Clientes</h1>
+            <h1>Unidades Consumidoras</h1>
         </div>
         <div class="col col-4 d-flex flex-row-reverse">
-            <a href="{% url 'clientes_cadastro' %}" class="btn btn-success "><span>Cadastrar Novo Cliente</span></a>						
+            <a href="{% url 'clientes_uc_cadastro' cliente=cliente.id %}" class="btn btn-success "><span>Cadastrar Nova UC</span></a>						
         </div>
     </div>
 
@@ -26,38 +26,50 @@
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">
-                            Nome Fantasia
+                            Número da UC
                         </th>
                         <th scope="col">
-                            Email
+                            Cliente
                         </th>
                         <th scope="col">
-                            Data de Cadastro
+                            Número do Cliente
                         </th>
                         <th scope="col">
+                            Classificação
+                        </th>
+                        <th scope="col">
+                            CNPJ
+                        </th>
+                        <!-- <th scope="col">
                             Ação
-                        </th>
+                        </th> -->
                     </tr>
                 </thead>
                 <tbody class="list">
 
-                    {% for cliente in clientes %}
+                    {% for uc in UCs %}
                     <tr>
                         <th scope="row" class="name">
-                            <a href="{% url 'clientes_uc' cliente.id %}">
-                                <span>{{ cliente.razao_social }}</span>
+                            <a href="{% url 'uc_faturas' uc.id %}">
+                                <span>{{ uc.numero_uc }}</span>
                             </a>
                         </th>
                         <td class="budget">
-                            {{ cliente.email }}
+                            {{ cliente.cliente }}
                         </td>
                         <td class="status">
-                            {{ cliente.criado_em }}
+                            {{ cliente.numero_cliente }}
                         </td>
-                        <td class="actions">
-                            <a type="button" class="btn btn-warning btn-sm" href="/clientes/atualiza/{{ cliente.id }}">Editar</a>
-                            <a type="button" class="btn btn-danger btn-sm delete" href="/clientes/deleta/{{ cliente.id }}">Deletar</a>
+                        <td class="status">
+                            {{ cliente.classificacao }}
                         </td>
+                        <td class="status">
+                            {{ cliente.cnpj }}
+                        </td>
+                        <!-- <td class="actions">
+                            <a type="button" class="btn btn-warning btn-sm" href="/clientes/uc/atualiza/{{ cliente.id }}">Editar</a>
+                            <a type="button" class="btn btn-danger btn-sm delete" href="/clientes/uc/deleta/{{ cliente.id }}">Deletar</a>
+                        </td> -->
                     </tr>
                     {% endfor %}
 

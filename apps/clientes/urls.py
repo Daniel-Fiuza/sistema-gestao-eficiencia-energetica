@@ -12,6 +12,12 @@ urlpatterns = [
     path('clientes/cadastro', views.cadastro, name='clientes_cadastro'),
     path('clientes/atualiza/<int:id>', views.atualiza, name='clientes_atualiza'),
     path('clientes/deleta/<int:id>', views.deleta, name='clientes_deleta'),
-    path('clientes/<int:id>/', views.detail, name='clientes_details'),
+    
+    path('clientes/<int:cliente>/uc', views.clientes_uc, name='clientes_uc'),
+    path('clientes/<int:cliente>/uc/cadastro', views.clientes_uc_cadastro, name='clientes_uc_cadastro'),
+    path('clientes/<int:cliente>/uc/atualiza/<int:id>', views.clientes_uc_atualiza, name='clientes_uc_atualiza'),
+    path('clientes/<int:cliente>/uc/deleta/<int:id>', views.clientes_uc_deleta, name='clientes_uc_deleta'),
 
-]
+    path('uc/<int:uc>/faturas', views.uc_faturas, name='uc_faturas'),
+    
+]   
