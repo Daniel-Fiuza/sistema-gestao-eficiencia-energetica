@@ -34,6 +34,9 @@
                         <th scope="col">
                             Data de Cadastro
                         </th>
+                        <th scope="col">
+                            Ação
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="list">
@@ -51,6 +54,10 @@
                         <td class="status">
                             {{ cliente.criado_em }}
                         </td>
+                        <td class="actions">
+                            <a type="button" class="btn btn-warning btn-sm" href="/clientes/atualiza/{{ cliente.id }}">Editar</a>
+                            <a type="button" class="btn btn-danger btn-sm delete" href="/clientes/deleta/{{ cliente.id }}">Deletar</a>
+                        </td>
                     </tr>
                     {% endfor %}
 
@@ -67,7 +74,13 @@
 
 <!-- Specific JS goes HERE -->
 {% block javascripts %}
-
+<script>
+    $('.delete').click(function() {
+        if(confirm('Você realmente deseja apagar este cliente?') != true){
+            return false
+        };
+    });
+</script>
 <script src="/static/assets/vendor/clipboard/dist/clipboard.min.js"></script>
 
 {% endblock javascripts %}
