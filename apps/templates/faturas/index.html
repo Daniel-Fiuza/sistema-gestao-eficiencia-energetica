@@ -13,10 +13,10 @@
 
     <div class="row p-3">
         <div class="col col-8">
-            <h1>Unidades Consumidoras</h1>
+            <h1>Faturas</h1>
         </div>
         <div class="col col-4 d-flex flex-row-reverse">
-            <a href="{% url 'clientes_uc_cadastro' cliente=cliente.id %}" class="btn btn-success "><span>Cadastrar Nova UC</span></a>						
+            <a href="{% url 'uc_faturas_cadastro' uc=UC %}" class="btn btn-success "><span>Adicionar Fatura</span></a>						
         </div>
     </div>
 
@@ -26,16 +26,10 @@
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">
-                            Número da UC
+                            Fatura
                         </th>
                         <th scope="col">
-                            Cliente
-                        </th>
-                        <th scope="col">
-                            Número do Cliente
-                        </th>
-                        <th scope="col">
-                            CNPJ
+                            Mês
                         </th>
                         <th scope="col">
                             Ação
@@ -44,25 +38,19 @@
                 </thead>
                 <tbody class="list">
 
-                    {% for uc in UCs %}
+                    {% for fatura in Faturas %}
                     <tr>
                         <th scope="row" class="name">
-                            <a href="{% url 'uc_faturas' uc.id %}">
-                                <span>{{ uc.numero_uc }}</span>
+                            <a href="{% url 'faturas_download' fatura.id %}">
+                                <span> Fatura </span>
                             </a>
                         </th>
                         <td class="budget">
-                            {{ uc.cliente }}
-                        </td>
-                        <td class="status">
-                            {{ uc.numero_cliente }}
-                        </td>
-                        <td class="status">
-                            {{ uc.cnpj }}
+                            {{ fatura.mes_ano|date:"F, Y"}}
                         </td>
                         <td class="actions">
-                            <a type="button" class="btn btn-warning btn-sm" href="/clientes/{{ cliente.id }}/uc/atualiza/{{ uc.id }}">Editar</a>
-                            <a type="button" class="btn btn-danger btn-sm delete" href="/clientes/{{ cliente.id }}/uc/deleta/{{ uc.id }}">Deletar</a>
+                            <!-- <a type="button" class="btn btn-warning btn-sm" href="/uc/{{ UC }}/faturas/atualiza/{{ fatura.id }}">Editar</a> -->
+                            <a type="button" class="btn btn-danger btn-sm delete" href="/uc/{{ UC }}/faturas/deleta/{{ fatura.id }}">Deletar</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -82,7 +70,7 @@
 {% block javascripts %}
 <script>
     $('.delete').click(function() {
-        if(confirm('Você realmente deseja apagar esta uc?') != true){
+        if(confirm('Você realmente deseja apagar esta fatura?') != true){
             return false
         };
     });

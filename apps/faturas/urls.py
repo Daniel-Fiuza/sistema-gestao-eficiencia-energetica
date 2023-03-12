@@ -9,5 +9,6 @@ from apps.faturas import views
 urlpatterns = [
 
     path('faturas', views.faturas, name='faturas'),
+    path('faturas/<int:id>/download', views.download, name='faturas_download'),
 
 ]

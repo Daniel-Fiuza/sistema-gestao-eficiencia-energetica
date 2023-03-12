@@ -19,5 +19,8 @@ urlpatterns = [
     path('clientes/<int:cliente>/uc/deleta/<int:id>', views.clientes_uc_deleta, name='clientes_uc_deleta'),
 
     path('uc/<int:uc>/faturas', views.uc_faturas, name='uc_faturas'),
+    path('uc/<int:uc>/faturas/cadastro', views.uc_faturas_cadastro, name='uc_faturas_cadastro'),
+    path('uc/<int:uc>/faturas/atualiza/<int:id>', views.uc_faturas_atualiza, name='uc_faturas_atualiza'),
+    path('uc/<int:uc>/faturas/deleta/<int:id>', views.uc_faturas_deleta, name='uc_faturas_deleta'),
     
 ]   
