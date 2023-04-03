@@ -443,3 +443,26 @@ class FaturaGrupoA4(FaturaBase):
 class FaturaGrupoA1(FaturaBase):
     def extrair(self):
         return f'Dados do grupo A1 extraídos do arquivo {self.nome_arquivo}'
+
+
+class FaturaBaseDB(FaturaBase):
+
+    def __init__(self, nome_arquivo_fatura: str, model: object):
+        self.model = model
+        super().__init__(nome_arquivo_fatura)
+
+
+    def converteDadosParaDB(self):
+        ...
+
+
+    def salvaDadosNoDB(self):
+        ...    
+        
+
+    def extrair(self, plotar_saida=False, salvar_saida=False):
+        self.converteParaImagem()
+        self.detectaCaixas(plotar=plotar_saida)
+        self.extraiTextoDoDocumento(salvar_saida)
+        self.estruturaDados()
+        self.exportaParaExcel()
