@@ -16,6 +16,10 @@ import logging
 import logging.config
 import yaml
 from django.conf import settings
+from apps.faturas.models import DadosFaturas
+import locale
+
+locale.setlocale(locale.LC_ALL, '')
 
 with open('log.yaml', 'r') as f:
     config = yaml.safe_load(f.read())
@@ -453,12 +457,116 @@ class FaturaBaseDB(FaturaBase):
 
 
     def converteDadosParaDB(self):
-        ...
+        dict_model = {}
 
+        for keyword, fields in self.keywords.items():
+            assert len(fields['texto_saida']) > 0, f"Campo texto_saida da palavra-chave {keyword} não pode ser vazio"
+
+        if self.keywords.get('Itens de Fatura', None):
+            itens_de_fatura = self.keywords['Itens de Fatura']['texto_saida']
+            campos = self.keywords['Itens de Fatura']['campos']
+            numero_campos = len(campos)
+
+            df_itens = pd.DataFrame(itens_de_fatura).transpose()
+            df_itens = df_itens.iloc[:, :numero_campos]
+            df_itens.columns = campos
+            df_itens = df_itens.dropna(subset=[campos[0]])
+
+            dict_model['demanda_ativa_kw'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Demanda Ativa', 'Quant.')
+            dict_model['demanda_ativa_rs'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Demanda Ativa', 'Valor (R$)')
+            dict_model['demanda_ativa_sem_icms_kw'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Demanda Ativa sem ICMS', 'Quant.')            
+            dict_model['demanda_ativa_sem_icms_rs'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Demanda Ativa sem ICMS', 'Valor (R$)')
+            dict_model['demanda_ultrapassagem_kw'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Demanda Ultrapassagem', 'Quant.')
+            dict_model['demanda_ultrapassagem_rs'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Demanda Ultrapassagem', 'Valor (R$)')
+            dict_model['energia_atv_forn_ponta_te_kwh'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Energia Atv Forn Ponta TE', 'Quant.')
+            dict_model['energia_atv_forn_ponta_te_rs'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Energia Atv Forn Ponta TE', 'Valor (R$)')
+            dict_model['energia_atv_forn_ponta_tusd_rs'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Energia Atv Forn Ponta TUSD', 'Valor (R$)')
+            dict_model['energia_atv_forn_f_ponta_te_kwh'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Energia Atv Forn F Ponta TE', 'Quant.')
+            dict_model['energia_atv_forn_f_ponta_te_rs'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Energia Atv Forn F Ponta TE', 'Valor (R$)')
+            dict_model['energia_atv_forn_f_ponta_tusd_rs'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Energia Atv Forn F Ponta TUSD', 'Valor (R$)')
+            dict_model['adicional'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Adicional', 'Valor (R$)')
+            dict_model['consumo_reativo_excedente_fp_kwh'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Consumo Reativo Excedente Fp', 'Quant.')
+            dict_model['consumo_reativo_excedente_fp_rs'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Consumo Reativo Excedente Fp', 'Valor (R$)')
+            dict_model['consumo_reativo_excedente_np_kwh'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Consumo Reativo Excedente Np', 'Quant.')
+            dict_model['consumo_reativo_excedente_np_rs'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Consumo Reativo Excedente Np', 'Valor (R$)')
+            dict_model['cip_ilum_pub_pref_municipal_rs'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'CIP ILUM', 'Valor (R$)')
+            dict_model['dic_rs'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'DIC', 'Valor (R$)')
+            dict_model['juros_moratorios_rs'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Juros Moratórios', 'Valor (R$)')
+            dict_model['multa_rs'] = \
+                self.retornaValor(df_itens, 'Itens de Fatura', 'Multa', 'Valor (R$)')
+
+        if self.keywords.get('PIS/PASEP', None):
+            tributos = self.keywords['PIS/PASEP']['texto_saida']
+            campos = self.keywords['PIS/PASEP']['campos']
+            numero_campos = len(campos)
+
+            df_tributos = pd.DataFrame(tributos).transpose()
+            df_tributos = df_tributos.iloc[:, :numero_campos]
+            df_tributos.columns = campos
+            df_tributos = df_tributos.dropna(subset=[campos[0]])
+
+            dict_model['icms'] = \
+                self.retornaValor(df_tributos, campos[0], 'ICMS', 'VALOR (R$)')
+            dict_model['pis_pasep'] = \
+                self.retornaValor(df_tributos, campos[0], 'PIS/PASEP', 'VALOR (R$)')
+            dict_model['cofins'] = \
+                self.retornaValor(df_tributos, campos[0], 'COFINS', 'VALOR (R$)')
+
+        dict_model['faturamento'] = dict_model['demanda_ativa_rs'] + dict_model['demanda_ativa_sem_icms_rs'] + \
+                                    dict_model['demanda_ultrapassagem_rs'] + dict_model['energia_atv_forn_ponta_te_rs'] + \
+                                    dict_model['energia_atv_forn_ponta_tusd_rs'] + dict_model['energia_atv_forn_f_ponta_te_rs'] + \
+                                    dict_model['energia_atv_forn_f_ponta_tusd_rs'] + dict_model['adicional'] + \
+                                    dict_model['consumo_reativo_excedente_fp_rs'] + dict_model['consumo_reativo_excedente_np_rs'] + \
+                                    dict_model['cip_ilum_pub_pref_municipal_rs'] - dict_model['dic_rs']
+        self.dict_model = dict_model
+        import json
+        print(f'dicionario finalizado: {json.dumps(self.dict_model, indent=4)}')
+        
+
+    def retornaValor(self, dataframe: object, nome_quadro, nome_item, nome_coluna):
+        try:
+            # Pesquisa se contem o campo de interesse. Para campos que iniciam com Adicional, por exemplo, pode retornar mais de um valor
+            value = dataframe.loc[dataframe[nome_quadro].str.contains(nome_item)][nome_coluna].values
+            if len(value) > 0:
+                # O campo ou campos pesquisados tem valor(es) não nulos
+                return sum([locale.atof(val) for val in value if val is not None])
+            else:
+                print(f'Campo {nome_item} na coluna {nome_coluna} nao encontrado, atribuido valor 0.0.')
+                # O campo encontrado tem valor nulo
+                return 0.0
+        except:
+            print(f'Campo {nome_item} na coluna {nome_coluna} nao encontrado, atribuido valor 0.0.')
+            return 0.0
+        
 
     def salvaDadosNoDB(self):
-        ...    
+        assert len(self.dict_model) > 0, 'Dicionario dict_model esta vazio, certifique-se de chamar a funcao converteDadosParaDB primeiro.'    
         
+        self.dict_model['mes_ano_fatura'] = '2023-01-01'
+        dados = DadosFaturas.objects.create(**self.dict_model)
+        dados.save()
+        return dados.id
+
 
     def extrair(self, plotar_saida=False, salvar_saida=False):
         self.converteParaImagem()
@@ -466,3 +574,5 @@ class FaturaBaseDB(FaturaBase):
         self.extraiTextoDoDocumento(salvar_saida)
         self.estruturaDados()
         self.exportaParaExcel()
+        self.converteDadosParaDB()
+        self.salvaDadosNoDB()

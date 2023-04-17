@@ -555,7 +555,7 @@
     '9340,00',
     '9433,00',
     'Hora Fora Ponta',
-    'aturado kWh'],
+    'aturado kWh']],
   'filtros': ['r1', 'r-2', 'r-2', 'r-2', 'r-2', 'r-2'],
   'tipo_de_dados': [str, float, float, float, float, int]},
  'PIS/PASEP': {'caixa': 'TRIBUTOS',
