@@ -25,7 +25,7 @@
           <div class="form-group h2 text-white d-inline-block mb-0">
             <select class="form-control" id="UCSelect">
               {% for uc in uc_options %}
-                {% if uc == uc_selected %}
+                {% if uc.numero_uc == uc_selected %}
                   <option selected> {{ uc }} </option>
                 {% else %}
                   <option> {{ uc }} </option>

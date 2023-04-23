@@ -6,7 +6,12 @@ from .models import Clientes, UC
 from .forms import CadastroClienteForm, CadastroUCForm
 from django.forms.models import model_to_dict
 from apps.faturas.models import Faturas
-from apps.faturas.forms import CadastroFaturaModelForm
+from apps.faturas.forms import CadastroFaturaModelForm, DadosFaturaModelForm
+from django.core.files.storage import FileSystemStorage
+from apps.ETL import FaturaBaseDB
+from apps.faturas.models import DadosFaturas
+from django.conf import settings
+import os
 
 # Create your views here.
 @login_required(login_url="/login/")
@@ -128,6 +133,26 @@ def uc_faturas_cadastro(request, uc):
             fatura = form.save(commit=False)
             fatura.uc_id = uc_instance
             fatura.save()
+
+            filename = os.path.join(settings.MEDIA_ROOT, fatura.fatura.name)
+
+            try:
+                etl_fatura = FaturaBaseDB(filename, DadosFaturas)
+                dadosfatura_id = etl_fatura.extrair()
+                
+                dadosfatura = DadosFaturas.objects.get(id=dadosfatura_id)
+                dadosfatura.fatura_id = fatura
+                dadosfatura.uc_id = uc_instance
+                dadosfatura.mes_ano_fatura = fatura.mes_ano
+                dadosfatura.save()
+
+            except:
+                dados = {field: 0.0 for field in DadosFaturaModelForm().fields.keys()}
+                dados['fatura_id'] = fatura
+                dados['uc_id'] = uc_instance
+                dados['mes_ano_fatura'] = fatura.mes_ano
+                DadosFaturas.objects.create(**dados)           
+
             return redirect('uc_faturas', uc=uc)
     else:
         form = CadastroFaturaModelForm()
@@ -149,9 +174,34 @@ def uc_faturas_atualiza(request, uc, id):
     return render(request, 'faturas/atualiza.html', {'form': form, 'uc': uc})
 
 
+@login_required(login_url="/login/")
+def uc_faturas_dados(request, uc, id):
+    fatura = get_object_or_404(Faturas, id=id)
+    dados_fatura = fatura.dadosfaturas_set.all()
+    form = DadosFaturaModelForm()
+    dados_fatura_instance = None
+
+    if dados_fatura:
+        dados_fatura_instance = dados_fatura.first()
+        form = DadosFaturaModelForm(instance=dados_fatura_instance)
+
+    if request.method == 'POST':
+        form = DadosFaturaModelForm(request.POST)
+
+        if dados_fatura_instance is not None:
+            form = DadosFaturaModelForm(request.POST, instance=dados_fatura_instance)
+
+        if form.is_valid():
+            dados = form.save(commit=False)
+            dados.fatura_id = fatura
+            dados.save()
+            return redirect('uc_faturas', uc=uc)
+        
+    return render(request, 'faturas/dados.html', {'form': form, 'uc': uc})
+
 
 @login_required(login_url="/login/")
 def uc_faturas_deleta(request, uc, id):
     fatura = get_object_or_404(Faturas, id=id)
-    fatura.delete()
+    res = fatura.delete()
     return redirect('uc_faturas', uc=uc)

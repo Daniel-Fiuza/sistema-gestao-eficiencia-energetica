@@ -41,7 +41,8 @@
                     {% for fatura in Faturas %}
                     <tr>
                         <th scope="row" class="name">
-                            <a href="{% url 'faturas_download' fatura.id %}">
+                            <!-- <a href="{% url 'faturas_download' fatura.id %}"> -->
+                            <a href="{% url 'uc_faturas_dados' UC fatura.id %}">
                                 <span> Fatura </span>
                             </a>
                         </th>
@@ -49,8 +50,8 @@
                             {{ fatura.mes_ano|date:"F, Y"}}
                         </td>
                         <td class="actions">
-                            <!-- <a type="button" class="btn btn-warning btn-sm" href="/uc/{{ UC }}/faturas/atualiza/{{ fatura.id }}">Editar</a> -->
-                            <a type="button" class="btn btn-danger btn-sm delete" href="/uc/{{ UC }}/faturas/deleta/{{ fatura.id }}">Deletar</a>
+                            <a type="button" class="btn btn-warning btn-sm" href="{% url 'faturas_download' fatura.id %}">Visualizar</a>
+                            <a type="button" class="btn btn-danger btn-sm delete" href="{% url 'uc_faturas_deleta' UC fatura.id %}">Deletar</a>
                         </td>
                     </tr>
                     {% endfor %}

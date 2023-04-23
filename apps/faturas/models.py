@@ -4,7 +4,7 @@ from apps.clientes.models import UC
 # Create your models here.
 
 def diretorio_faturas(instance, filename):
-    return 'apps/media/faturas/{0}/{1}/{2}'.format(instance.uc_id.cliente.razao_social, instance.uc_id.numero_uc, filename)
+    return '{0}/{1}/{2}'.format(instance.uc_id.cliente.razao_social, instance.uc_id.numero_uc, filename)
     
 class Faturas(models.Model):
     uc_id = models.ForeignKey(UC, on_delete=models.DO_NOTHING)

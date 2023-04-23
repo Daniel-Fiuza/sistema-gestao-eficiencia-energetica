@@ -1,5 +1,5 @@
 from django import forms
-from .models import Faturas
+from .models import Faturas, DadosFaturas
 from django.forms.widgets import NumberInput
 import datetime
 
@@ -100,3 +100,23 @@ class UploadFaturaForm(forms.Form):
                 "class": "form-control"
             }
     ))
+
+
+class DadosFaturaModelForm(forms.ModelForm):
+    # fatura = forms.FileField(
+    #     label='Fatura',
+    #     widget=forms.FileInput(
+    #         attrs={
+    #             "placeholder": "Faça o upload da fatura",
+    #             "class": "form-control"
+    #         }
+    # ))
+
+    # mes_ano_fatura = CustomDateField(
+    #     label='Mês de Referência',
+    #     widget=forms.DateInput(attrs={'type': 'month'}
+    # ))
+
+    class Meta:
+        model = DadosFaturas
+        exclude = ['fatura_id', 'uc_id']

@@ -563,6 +563,7 @@ class FaturaBaseDB(FaturaBase):
         assert len(self.dict_model) > 0, 'Dicionario dict_model esta vazio, certifique-se de chamar a funcao converteDadosParaDB primeiro.'    
         
         self.dict_model['mes_ano_fatura'] = '2023-01-01'
+        self.dict_model['demanda_contratada'] = 200.0
         dados = DadosFaturas.objects.create(**self.dict_model)
         dados.save()
         return dados.id
@@ -573,6 +574,10 @@ class FaturaBaseDB(FaturaBase):
         self.detectaCaixas(plotar=plotar_saida)
         self.extraiTextoDoDocumento(salvar_saida)
         self.estruturaDados()
+        logger.debug('Exporta para Excel')
         self.exportaParaExcel()
+        logger.debug('Converte dados para DB')
         self.converteDadosParaDB()
-        self.salvaDadosNoDB()
+        logger.debug('Salva dados no DB')
+        id = self.salvaDadosNoDB()
+        return id
