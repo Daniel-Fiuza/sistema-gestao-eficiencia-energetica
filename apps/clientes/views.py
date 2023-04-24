@@ -116,7 +116,7 @@ def clientes_uc_deleta(request, cliente, id):
 @login_required(login_url="/login/")
 def uc_faturas(request, uc):
     uc = get_object_or_404(UC, id=uc)
-    faturas = Faturas.objects.all()
+    faturas = Faturas.objects.filter(uc_id=uc)
 
     html_template = loader.get_template('faturas/index.html')
     return HttpResponse(html_template.render({'Faturas':faturas, 'UC': uc.id}))
