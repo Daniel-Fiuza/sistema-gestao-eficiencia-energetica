@@ -272,14 +272,6 @@
 
 <!-- Dados Globais dos Gráficos -->
 <script>
-  
-  // Variáveis dos indicadores
-  var data_multas = JSON.parse('{{ indicadores.multas|escapejs }}');
-  var data_ult_demanda = JSON.parse('{{ indicadores.ult_demanda|escapejs }}');
-  var data_kwh_efetivo = JSON.parse('{{ indicadores.kwh_efetivo|escapejs }}');
-  var data_dist_gastos = JSON.parse('{{ indicadores.dist_gastos|escapejs }}');
-  var data_hp_hfp = JSON.parse('{{ indicadores.hp_hfp|escapejs }}');
-  
   // Funcionalidade do Filtro
   $( "#TimeSelect,#UCSelect" ).change(function() {
     let time_option = $( "#TimeSelect" ).val();
@@ -288,6 +280,15 @@
     
     window.location.href = '/?uc_filter=' + uc_option + '&time_filter=' + time_option;
   });
+</script>
+<script>
+
+  // Variáveis dos indicadores
+  var data_multas = JSON.parse('{{ indicadores.multas|escapejs }}');
+  var data_ult_demanda = JSON.parse('{{ indicadores.ult_demanda|escapejs }}');
+  var data_kwh_efetivo = JSON.parse('{{ indicadores.kwh_efetivo|escapejs }}');
+  var data_dist_gastos = JSON.parse('{{ indicadores.dist_gastos|escapejs }}');
+  var data_hp_hfp = JSON.parse('{{ indicadores.hp_hfp|escapejs }}');
 
 </script>
 
